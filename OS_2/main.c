@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <string.h>
 
 void sortBooble(char*massIn)
 {
@@ -101,7 +102,7 @@ if (pipe(file_pipes) == -1)//если канал обмена не создан
     {
         close(file_pipes[0]);//закрываем выход для чтения
         sortBooble(dataFile);//сортируем данные
-        write(file_pipes[1], dataFile, strlen(dataFile));//записываем данные в канал обмена
+        write(file_pipes[1], dataFile, strlen(dataFile));//записываем данные в канал обмена, dataFile -буффер
          _exit(EXIT_SUCCESS);//выходим из потока
     }
     else
@@ -111,7 +112,7 @@ if (pipe(file_pipes) == -1)//если канал обмена не создан
         //-------------------------------------выводим данные о завершении дочернего потока
         int status;
         waitpid(pid, &status, 0);
-        printf("exit normally? %s\n", (WIFEXITED(status) ? "true" : "false"));
+        printf("exit normally? %s\n", (WIFEXITED(status) ? "true" : "false")); //не равно нулю, если дочерний процесс успешно завершился
         printf("child exitcode = %i\n", WEXITSTATUS(status));
         //---------------------------------------------------------------------------------
 
@@ -122,14 +123,14 @@ if (pipe(file_pipes) == -1)//если канал обмена не создан
         int s_buf = strlen(buffer);
 
         int p;
-        if(s_data>s_buf)
-        p=s_data;
-        else
-        p=s_buf;
+        if(s_data>s_buf){
+            p=s_data;
+        } else {
+            p=s_buf;
+        }
 
         for( int i=0; i<p; i++)
         {
-
             if(i<s_data)
             printf("file1->%c\n",dataFile[i]);
             if(i<s_buf)
@@ -138,6 +139,6 @@ if (pipe(file_pipes) == -1)//если канал обмена не создан
 
         wait(NULL);                /* Ожидание потомка */
         fclose(myFile);
-        _exit(EXIT_SUCCESS);
+        _exit(EXIT_SUCCESS); // все дескрипторы файлов, принадлежащие процессу, закрываются
     }
 }

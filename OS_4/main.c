@@ -47,21 +47,23 @@ int main()
     int fsize=0;
     char *ptr1,*ptr2;
 
-    printf("Введите путь для первого файла\n");
+    printf("Make sure all files are in the same folder.\nEnter the name of the first file\n");
     gets(fname1);
-
-
-    printf("\nВведите путь для первого файла\n");
+    //    fname1="/Users/macbook/Desktop/OS_2/file1.txt"
+    
+    
+    printf("\nEnter the name of the second file\n");
     gets(fname2);
+    //    fname2="/Users/macbook/Desktop/OS_2/file2.txt"
 
     //-------------------------------------------------------------------------отображение в память первого файла
     fd1 = open(fname1, O_RDWR | O_CREAT, DEFFILEMODE);
-    ptr1= mmap(NULL, sizeof(char), PROT_READ | PROT_WRITE, MAP_SHARED, fd1, 0);//настройки для записи и чтения ,доступный для всех потоков
+    ptr1= mmap(NULL, sizeof(char), PROT_READ | PROT_WRITE, MAP_SHARED, fd1, 0);//настройки для записи и чтения ,доступ для всех потоков
     //-----------------------------------------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------отображение в память второго файла
     fd2 = open(fname2, O_RDWR | O_CREAT, DEFFILEMODE);
-    ptr2 = mmap(NULL, sizeof(char), PROT_READ | PROT_WRITE, MAP_SHARED, fd2, 0);//настройки для записи и чтения ,доступный для всех потоков
+    ptr2 = mmap(NULL, sizeof(char), PROT_READ | PROT_WRITE, MAP_SHARED, fd2, 0);//настройки для записи и чтения ,доступ для всех потоков
     //-----------------------------------------------------------------------------------------------------------
 
     close(fd1);
@@ -93,7 +95,7 @@ int main()
 
         sortBooble(ptr1);//сортируем текущие даннные родительского потока
 
-        int s_data1= strlen(ptr1);
+        int s_data1= strlen(ptr1); //количество символов в файлах
         int s_data2 = strlen(ptr2);
 
         int p;
